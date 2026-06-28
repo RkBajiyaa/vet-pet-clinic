@@ -1,10 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* Set the default font to Manrope */
   --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
 
-  /* Colors */
+  /* Palette */
   --color-surface: #f8f9ff;
   --color-surface-container-lowest: #ffffff;
   --color-surface-container-low: #eff4ff;
@@ -30,22 +29,33 @@
   --color-on-error: #ffffff;
 }
 
-/* Custom Icon Utilities */
+/* ── Material Symbols ── */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined', sans-serif !important;
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  /* prevent icon text from wrapping or being clipped */
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: middle;
 }
+.icon-fill { font-variation-settings: 'FILL' 1; }
 
-.icon-fill {
-  font-variation-settings: 'FILL' 1;
-}
+/* ── Scrollbar helpers ── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Hide scrollbar for the review slider */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+/* ── Smooth scrolling ── */
+html { scroll-behavior: smooth; }
 
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* ── Active nav link highlight ── */
+.nav-link-active { color: var(--color-primary) !important; font-weight: 700; }
+
+/* ── Mobile tap highlight removal ── */
+a, button { -webkit-tap-highlight-color: transparent; }
+
+/* ── Custom focus ring for accessibility ── */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }

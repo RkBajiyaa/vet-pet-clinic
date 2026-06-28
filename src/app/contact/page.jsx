@@ -1,175 +1,200 @@
-export const metadata = {
-  title: 'Contact Us | VET PET CLINIC Mahapura',
-  description: 'Expert veterinary care is just a message away. Reach out for appointments, inquiries, or 24/7 emergency assistance in Jaipur.',
-};
+'use client';
+
+import { useState } from 'react';
 
 export default function ContactPage() {
+  const [form, setForm] = useState({ ownerName: '', petName: '', phone: '', email: '', service: '', message: '' });
+  const [errors, setErrors]   = useState({});
+  const [sending, setSending] = useState(false);
+
+  const validate = () => {
+    const e = {};
+    if (!form.ownerName.trim()) e.ownerName = 'Please enter your name.';
+    if (!form.petName.trim())   e.petName   = 'Please enter your pet\'s name.';
+    if (!form.phone.trim())     e.phone     = 'Please enter your phone number.';
+    if (!form.service)          e.service   = 'Please select a service.';
+    return e;
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSending(true);
+    const text =
+      `Hello VET PET CLINIC!%0A%0AI would like to book an appointment.%0A%0A` +
+      `*Owner Name:* ${form.ownerName}%0A` +
+      `*Pet Name:* ${form.petName}%0A` +
+      `*Phone:* ${form.phone}%0A` +
+      `*Email:* ${form.email || 'N/A'}%0A` +
+      `*Service:* ${form.service}%0A` +
+      `*Message:* ${form.message || 'N/A'}`;
+    window.open(`https://wa.me/917240549293?text=${text}`, '_blank');
+    setTimeout(() => setSending(false), 2000);
+  };
+
+  const inputCls = (field) =>
+    `w-full bg-surface border rounded-xl md:rounded-2xl px-4 py-3 md:py-3.5 text-sm md:text-base text-on-surface
+    focus:ring-2 focus:ring-primary/40 focus:border-primary focus:outline-none transition-all placeholder:text-outline-variant
+    ${errors[field] ? 'border-error ring-1 ring-error/30' : 'border-outline-variant/50'}`;
+
   return (
     <main className="flex-grow w-full">
-      
-      {/* Page Header */}
-      <section className="text-center max-w-3xl mx-auto flex flex-col gap-4 px-4 md:px-8 py-16 md:py-24">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary tracking-tight">Let's Connect</h1>
-        <p className="text-lg md:text-xl text-on-surface-variant leading-relaxed">
+
+      {/* ── PAGE HEADER ── */}
+      <section className="text-center max-w-3xl mx-auto px-4 md:px-8 py-10 md:py-20">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary tracking-tight mb-4">
+          Let&apos;s Connect
+        </h1>
+        <p className="text-sm md:text-xl text-on-surface-variant leading-relaxed">
           Expert care is just a message away. Reach out for appointments, inquiries, or emergency assistance.
         </p>
       </section>
 
-      {/* Bento Layout Grid */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-16 md:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          
-          {/* Left Column: Contact Info Card */}
-          <div className="lg:col-span-5 flex flex-col h-full">
-            <div className="bg-surface-container-lowest rounded-[2.5rem] p-8 md:p-12 shadow-[0_12px_32px_rgba(11,28,48,0.06)] border border-outline-variant/10 relative overflow-hidden h-full flex flex-col transition-all duration-500 hover:shadow-[0_20px_40px_rgba(11,28,48,0.1)] group">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-700"></div>
-              
-              <h2 className="text-3xl font-extrabold text-on-surface mb-8">Clinic Details</h2>
-              
-              <ul className="space-y-8 flex-grow">
-                <li className="flex items-start gap-5 group/item">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full text-primary flex items-center justify-center shrink-0 group-hover/item:scale-110 transition-transform duration-300">
-                    <span className="material-symbols-outlined">location_on</span>
+      {/* ── BENTO GRID ── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-12 md:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+
+          {/* ── LEFT: Clinic Info ── */}
+          <div className="lg:col-span-5">
+            <div className="bg-white rounded-2xl md:rounded-[2rem] p-6 md:p-10 shadow-[0_12px_40px_rgba(11,28,48,0.07)] border border-outline-variant/10 relative overflow-hidden group h-full flex flex-col">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full" />
+
+              <h2 className="text-xl md:text-2xl font-extrabold text-on-surface mb-6">Clinic Details</h2>
+
+              <ul className="space-y-6 flex-grow">
+                {/* Location */}
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full text-primary flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-lg">location_on</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-1">Location</p>
-                    <p className="text-base md:text-lg text-on-surface font-medium leading-relaxed">
-                      VET PET CLINIC, Mahapura<br/>
-                      Jaipur, Rajasthan 302026
+                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Location</p>
+                    <p className="text-sm md:text-base text-on-surface font-medium leading-relaxed">
+                      VET PET CLINIC, Mahapura<br />Jaipur, Rajasthan 302026
                     </p>
                   </div>
                 </li>
-                
-                <li className="flex items-start gap-5 group/item">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full text-primary flex items-center justify-center shrink-0 group-hover/item:scale-110 transition-transform duration-300">
-                    <span className="material-symbols-outlined">phone_in_talk</span>
+
+                {/* Phone */}
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full text-primary flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-lg">phone_in_talk</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-1">Direct Lines</p>
-                    <p className="text-base md:text-lg text-primary font-extrabold hover:underline cursor-pointer">7240549293</p>
-                    <p className="text-base md:text-lg text-primary font-extrabold hover:underline cursor-pointer">8764002844</p>
+                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Direct Lines</p>
+                    <a href="tel:07240549293" className="block text-sm md:text-base text-primary font-extrabold hover:underline">07240549293</a>
+                    <a href="tel:08764002844" className="block text-sm md:text-base text-primary font-extrabold hover:underline">08764002844</a>
                   </div>
                 </li>
-                
-                <li className="flex items-start gap-5 group/item">
-                  <div className="w-12 h-12 bg-tertiary/10 rounded-full text-tertiary flex items-center justify-center shrink-0 group-hover/item:scale-110 transition-transform duration-300">
-                    <span className="material-symbols-outlined icon-fill">schedule</span>
+
+                {/* Hours */}
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-tertiary/10 rounded-full text-tertiary flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined icon-fill text-lg">schedule</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-1">Operating Hours</p>
-                    <p className="text-base md:text-lg text-tertiary font-extrabold">Open 24/7 for Emergencies</p>
-                    <p className="text-sm text-on-surface-variant font-medium mt-1">Routine care: 9 AM - 8 PM</p>
+                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Operating Hours</p>
+                    <p className="text-sm md:text-base text-tertiary font-extrabold">Open 24/7 for Emergencies</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">Routine care: 9 AM – 8 PM</p>
                   </div>
                 </li>
               </ul>
 
-              <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full">
-                <button className="flex-1 bg-[#25D366] text-white py-4 px-6 rounded-full font-bold flex justify-center items-center gap-2 hover:bg-[#20bd5a] transition-all duration-300 shadow-[0_8px_20px_rgba(37,211,102,0.3)] hover:scale-105">
-                  <span className="material-symbols-outlined">forum</span>
-                  WhatsApp Us
-                </button>
-                <button className="flex-1 bg-surface-container text-on-surface py-4 px-6 rounded-full font-bold flex justify-center items-center gap-2 hover:bg-surface-container-high transition-all duration-300 shadow-sm hover:scale-105">
-                  <span className="material-symbols-outlined">directions</span>
-                  Get Directions
-                </button>
+              <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://wa.me/917240549293"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-[#25D366] text-white py-3 rounded-full font-bold flex justify-center items-center gap-2 hover:bg-[#20bd5a] transition-all hover:scale-105 shadow-[0_6px_20px_rgba(37,211,102,0.3)] text-sm"
+                >
+                  <span className="material-symbols-outlined text-base">forum</span> WhatsApp Us
+                </a>
+                <a
+                  href="https://maps.app.goo.gl/oRmsU7r9UwrfwAWQ9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-surface-container text-on-surface py-3 rounded-full font-bold flex justify-center items-center gap-2 hover:bg-surface-container-high transition-all hover:scale-105 text-sm"
+                >
+                  <span className="material-symbols-outlined text-base">directions</span> Get Directions
+                </a>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Conversion Form */}
+          {/* ── RIGHT: Booking Form ── */}
           <div className="lg:col-span-7">
-            <div className="bg-surface-container-lowest rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_40px_rgba(11,28,48,0.08)] border border-outline-variant/10">
-              <div className="mb-10">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-on-surface mb-3 tracking-tight">Book an Appointment</h2>
-                <p className="text-lg text-on-surface-variant">Fill out the form below and our team will confirm your visit shortly.</p>
-              </div>
+            <div className="bg-white rounded-2xl md:rounded-[2rem] p-6 md:p-10 shadow-[0_20px_60px_rgba(11,28,48,0.08)] border border-outline-variant/10">
+              <h2 className="text-xl md:text-3xl font-extrabold text-on-surface mb-1 tracking-tight">Book an Appointment</h2>
+              <p className="text-xs md:text-sm text-on-surface-variant mb-7">Fill out the form — we'll confirm via WhatsApp shortly.</p>
 
-              <form className="flex flex-col gap-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-on-surface ml-1" htmlFor="ownerName">Owner Name</label>
-                    <input 
-                      className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow placeholder:text-outline" 
-                      id="ownerName" 
-                      name="ownerName" 
-                      placeholder="Jane Doe" 
-                      type="text"
-                    />
+              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="ownerName">Owner Name <span className="text-error">*</span></label>
+                    <input id="ownerName" name="ownerName" type="text" placeholder="Jane Doe" className={inputCls('ownerName')} value={form.ownerName} onChange={handleChange} />
+                    {errors.ownerName && <p className="text-error text-xs mt-1">{errors.ownerName}</p>}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-on-surface ml-1" htmlFor="petName">Pet Name</label>
-                    <input 
-                      className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow placeholder:text-outline" 
-                      id="petName" 
-                      name="petName" 
-                      placeholder="Buddy" 
-                      type="text"
-                    />
+                  <div>
+                    <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="petName">Pet Name <span className="text-error">*</span></label>
+                    <input id="petName" name="petName" type="text" placeholder="Buddy" className={inputCls('petName')} value={form.petName} onChange={handleChange} />
+                    {errors.petName && <p className="text-error text-xs mt-1">{errors.petName}</p>}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-on-surface ml-1" htmlFor="phone">Phone Number</label>
-                    <input 
-                      className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow placeholder:text-outline" 
-                      id="phone" 
-                      name="phone" 
-                      placeholder="+91 XXXXX XXXXX" 
-                      type="tel"
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="phone">Phone Number <span className="text-error">*</span></label>
+                    <input id="phone" name="phone" type="tel" placeholder="+91 XXXXX XXXXX" className={inputCls('phone')} value={form.phone} onChange={handleChange} />
+                    {errors.phone && <p className="text-error text-xs mt-1">{errors.phone}</p>}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-on-surface ml-1" htmlFor="email">Email Address</label>
-                    <input 
-                      className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow placeholder:text-outline" 
-                      id="email" 
-                      name="email" 
-                      placeholder="jane@example.com" 
-                      type="email"
-                    />
+                  <div>
+                    <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="email">Email <span className="text-on-surface-variant font-normal">(optional)</span></label>
+                    <input id="email" name="email" type="email" placeholder="jane@example.com" className={inputCls('email')} value={form.email} onChange={handleChange} />
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-bold text-on-surface ml-1" htmlFor="service">Service Required</label>
+                <div>
+                  <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="service">Service Required <span className="text-error">*</span></label>
                   <div className="relative">
-                    <select 
-                      className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow appearance-none cursor-pointer" 
-                      id="service" 
-                      name="service"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>Select a service</option>
-                      <option value="consultation">General Consultation</option>
-                      <option value="vaccination">Vaccination</option>
-                      <option value="grooming">Grooming</option>
-                      <option value="surgery">Surgery / Specialist</option>
-                      <option value="emergency">Emergency Care</option>
+                    <select id="service" name="service" className={`${inputCls('service')} appearance-none cursor-pointer`} value={form.service} onChange={handleChange} defaultValue="">
+                      <option value="" disabled>Select a service…</option>
+                      <option>General Consultation</option>
+                      <option>Vaccination</option>
+                      <option>Grooming</option>
+                      <option>Surgery / Specialist</option>
+                      <option>Emergency Care</option>
+                      <option>Pet Boarding</option>
+                      <option>Doorstep Service</option>
+                      <option>Pet Training</option>
                     </select>
-                    <span className="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
-                      expand_more
-                    </span>
+                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-lg">expand_more</span>
                   </div>
+                  {errors.service && <p className="text-error text-xs mt-1">{errors.service}</p>}
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-bold text-on-surface ml-1" htmlFor="message">Message (Optional)</label>
-                  <textarea 
-                    className="w-full bg-surface border border-outline-variant/50 rounded-2xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow resize-none placeholder:text-outline" 
-                    id="message" 
-                    name="message" 
-                    placeholder="Briefly describe your pet's symptoms or requirements..." 
-                    rows="4"
-                  ></textarea>
+                <div>
+                  <label className="text-xs font-bold text-on-surface mb-1.5 block" htmlFor="message">Message <span className="text-on-surface-variant font-normal">(optional)</span></label>
+                  <textarea id="message" name="message" rows={3} placeholder="Describe your pet's symptoms or any special requirements…" className={inputCls('message')} value={form.message} onChange={handleChange} />
                 </div>
 
-                <button 
-                  className="w-full mt-6 bg-tertiary text-white py-4 rounded-full font-bold flex justify-center items-center gap-3 hover:bg-tertiary-container hover:text-on-tertiary-container transition-all duration-300 shadow-[0_8px_30px_rgba(130,81,0,0.3)] hover:scale-[1.02] text-lg" 
-                  type="button"
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="mt-2 w-full py-4 rounded-full bg-tertiary text-white font-bold flex justify-center items-center gap-2
+                    hover:bg-tertiary-container hover:text-on-tertiary-container transition-all duration-300
+                    shadow-[0_8px_28px_rgba(130,81,0,0.3)] hover:scale-[1.02] text-sm md:text-base
+                    disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                  Request Appointment
-                  <span className="material-symbols-outlined">arrow_forward</span>
+                  {sending
+                    ? <><span className="material-symbols-outlined animate-spin text-base">progress_activity</span> Opening WhatsApp…</>
+                    : <><span className="material-symbols-outlined text-base">chat</span> Request Appointment via WhatsApp</>
+                  }
                 </button>
               </form>
             </div>
@@ -177,21 +202,28 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Full-width Map */}
-      <div className="w-full h-[400px] md:h-[500px] relative">
-        <img 
-          alt="Location Map Placeholder" 
-          className="w-full h-full object-cover" 
-          src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1920&auto=format&fit=crop"
+      {/* ── GOOGLE MAP ── */}
+      <div className="w-full h-[280px] md:h-[480px] relative">
+        <iframe
+          title="VET PET CLINIC – Mahapura, Jaipur"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14234.3431602715!2d75.6983755!3d26.874495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396c4d4452093f1d%3A0x868b44edb7245d81!2sMahapura%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+          className="absolute inset-0 w-full h-full border-0"
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
         />
-        <div className="absolute inset-0 bg-primary/20 pointer-events-none mix-blend-multiply"></div>
-        {/* Floating Map Pin Box */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-lowest p-6 rounded-3xl shadow-[0_20px_40px_rgba(11,28,48,0.15)] flex flex-col items-center text-center animate-bounce duration-1000">
-            <span className="material-symbols-outlined icon-fill text-error text-5xl mb-2">location_on</span>
-            <h3 className="font-extrabold text-on-surface">VET PET CLINIC</h3>
-            <p className="text-sm font-medium text-on-surface-variant">Mahapura, Jaipur</p>
-        </div>
+        {/* Floating Open-in-Maps button */}
+        <a
+          href="https://maps.app.goo.gl/oRmsU7r9UwrfwAWQ9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-5 py-2.5 rounded-full shadow-[0_8px_30px_rgba(11,28,48,0.18)] flex items-center gap-2 font-bold text-primary hover:bg-primary hover:text-white transition-all text-sm"
+        >
+          <span className="material-symbols-outlined icon-fill text-error text-base">location_on</span>
+          Open in Google Maps
+        </a>
       </div>
+
     </main>
   );
 }
